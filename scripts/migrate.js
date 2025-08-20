@@ -2,16 +2,24 @@ import { createClient } from '@supabase/supabase-js';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { config } from 'dotenv';
+
+// Load environment variables
+config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Read environment variables
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
-  console.error('Missing Supabase environment variables. Please connect to Supabase first.');
+  console.log('\n🔧 Supabase Setup Required');
+  console.log('=====================================');
+  console.log('Please click the "Connect to Supabase" button in the top right corner');
+  console.log('to set up your Supabase project and environment variables.');
+  console.log('\nOnce connected, run this command again to create the database tables.');
   process.exit(1);
 }
 
