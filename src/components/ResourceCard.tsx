@@ -17,6 +17,23 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
   const fileUrl = currentTranslation?.file_url || resource.file_url;
   const fileName = currentTranslation?.file_name || resource.file_name;
 
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Failed to download file', err);
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
       <div className="p-6">
@@ -67,14 +84,13 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
               View
             </a>
 
-            <a
-              href={fileUrl}
-              download={fileName}
+            <button
+              onClick={handleDownload}
               className="inline-flex items-center px-4 py-2 bg-transparent text-blue-600 border border-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors duration-200"
             >
               <Download className="w-4 h-4 mr-2" />
               Download
-            </a>
+            </button>
 
             {isAdmin && onDelete && (
               <button
