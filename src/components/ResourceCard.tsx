@@ -1,6 +1,7 @@
 import React from 'react';
 import { Download, QrCode, Trash2, Eye } from 'lucide-react';
 import { Resource } from '../types';
+import { generateQRCode } from '../utils/qrCode';
 
 interface ResourceCardProps {
   resource: Resource;
@@ -103,11 +104,11 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
             </div>
           </div>
 
-        {showQR && resource.qr_code && (
+        {showQR && (
           <div className="mt-4 pt-4 border-t border-gray-100 text-center">
             <p className="text-sm text-gray-600 mb-2">Scan to download</p>
             <img
-              src={resource.qr_code}
+              src={generateQRCode(fileUrl)}
               alt="QR Code"
               className="mx-auto w-32 h-32 border border-gray-200 rounded-lg"
             />
