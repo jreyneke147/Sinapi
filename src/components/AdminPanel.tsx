@@ -25,28 +25,23 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     type: 'manual' as 'manual' | 'brochure',
   });
   const [newFile, setNewFile] = useState<File | null>(null);
-  const [translations, setTranslations] = useState<
-    { id: string; language: string; file: File | null }[]
-  >([]);
+  const [translations, setTranslations] = useState<{ language: string; file: File | null }[]>([]);
 
   const addTranslationField = () =>
-    setTranslations(prev => [
-      ...prev,
-      { id: crypto.randomUUID(), language: '', file: null }
-    ]);
+    setTranslations(prev => [...prev, { language: '', file: null }]);
 
   const updateTranslation = (
-    id: string,
+    index: number,
     field: 'language' | 'file',
     value: string | File | null
   ) => {
     setTranslations(prev =>
-      prev.map(t => (t.id === id ? { ...t, [field]: value } : t))
+      prev.map((t, i) => (i === index ? { ...t, [field]: value } : t))
     );
   };
 
-  const removeTranslationField = (id: string) => {
-    setTranslations(prev => prev.filter(t => t.id !== id));
+  const removeTranslationField = (index: number) => {
+    setTranslations(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -100,11 +95,9 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
       setNewResource({ title: '', description: '', category: '', type: 'manual' });
       setNewFile(null);
       setTranslations([]);
-
       // Reset file input
       const fileInput = document.getElementById('file-input') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
-      
     } catch (error) {
       console.error(error);
       alert('Failed to add resource. Please try again.');
@@ -115,12 +108,12 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
   const handleDeleteResource = async (id: string) => {
     if (confirm('Are you sure you want to delete this resource?')) {
-      try {
-        await deleteResource(id);
-      } catch (error) {
-        console.error(error);
-        alert('Failed to delete resource. Please try again.');
-      }
+        try {
+          await deleteResource(id);
+        } catch (error) {
+          console.error(error);
+          alert('Failed to delete resource. Please try again.');
+        }
     }
   };
 
@@ -250,24 +243,24 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
                 <div className="space-y-4 mb-4">
                   <h5 className="font-medium text-gray-900">Translations</h5>
-                  {translations.map((t) => (
-                    <div key={t.id} className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                  {translations.map((t, index) => (
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-2">
                       <input
                         type="text"
                         value={t.language}
-                        onChange={(e) => updateTranslation(t.id, 'language', e.target.value)}
+                        onChange={(e) => updateTranslation(index, 'language', e.target.value)}
                         placeholder="Language"
                         className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                       />
                       <input
                         type="file"
                         accept=".pdf,.doc,.docx"
-                        onChange={(e) => updateTranslation(t.id, 'file', e.target.files?.[0] || null)}
+                        onChange={(e) => updateTranslation(index, 'file', e.target.files?.[0] || null)}
                         className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                       />
                       <button
                         type="button"
-                        onClick={() => removeTranslationField(t.id)}
+                        onClick={() => removeTranslationField(index)}
                         className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                       >
                         Remove
