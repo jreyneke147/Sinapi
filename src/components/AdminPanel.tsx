@@ -25,6 +25,24 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     type: 'manual' as 'manual' | 'brochure',
   });
   const [newFile, setNewFile] = useState<File | null>(null);
+  const [translations, setTranslations] = useState<{ language: string; file: File | null }[]>([]);
+
+  const addTranslationField = () =>
+    setTranslations(prev => [...prev, { language: '', file: null }]);
+
+  const updateTranslation = (
+    index: number,
+    field: 'language' | 'file',
+    value: string | File | null
+  ) => {
+    setTranslations(prev =>
+      prev.map((t, i) => (i === index ? { ...t, [field]: value } : t))
+    );
+  };
+
+  const removeTranslationField = (index: number) => {
+    setTranslations(prev => prev.filter((_, i) => i !== index));
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +53,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
       setEmail('');
       setPassword('');
     } catch (error) {
+      console.error(error);
       alert('Login failed. Please check your credentials.');
     } finally {
       setIsLoading(false);
@@ -49,9 +68,19 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     try {
       // Upload file to Supabase storage
       const fileUrl = await uploadFile(newFile);
-      
+
       // Generate QR code
       const qrCode = generateQRCode(fileUrl);
+
+      // Upload translations
+      const uploadedTranslations = await Promise.all(
+        translations
+          .filter(t => t.language && t.file)
+          .map(async (t) => {
+            const url = await uploadFile(t.file!);
+            return { language: t.language, file_url: url, file_name: t.file!.name };
+          })
+      );
 
       // Add resource to database
       await addResource({
@@ -59,17 +88,20 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
         file_url: fileUrl,
         file_name: newFile.name,
         qr_code: qrCode,
+        translations: uploadedTranslations,
       });
 
       // Reset form
       setNewResource({ title: '', description: '', category: '', type: 'manual' });
       setNewFile(null);
-      
+      setTranslations([]);
+
       // Reset file input
       const fileInput = document.getElementById('file-input') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
       
     } catch (error) {
+      console.error(error);
       alert('Failed to add resource. Please try again.');
     } finally {
       setIsLoading(false);
@@ -81,6 +113,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
       try {
         await deleteResource(id);
       } catch (error) {
+        console.error(error);
         alert('Failed to delete resource. Please try again.');
       }
     }
@@ -208,15 +241,51 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                     className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     required
                   />
+                </div>
+
+                <div className="space-y-4 mb-4">
+                  <h5 className="font-medium text-gray-900">Translations</h5>
+                  {translations.map((t, index) => (
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                      <input
+                        type="text"
+                        value={t.language}
+                        onChange={(e) => updateTranslation(index, 'language', e.target.value)}
+                        placeholder="Language"
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      />
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        onChange={(e) => updateTranslation(index, 'file', e.target.files?.[0] || null)}
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeTranslationField(index)}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
                   <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center disabled:opacity-50"
+                    type="button"
+                    onClick={addTranslationField}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                   >
-                    <Plus className="w-4 h-4 mr-2" />
-                    {isLoading ? 'Adding...' : 'Add Resource'}
+                    Add Translation
                   </button>
                 </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center disabled:opacity-50"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  {isLoading ? 'Adding...' : 'Add Resource'}
+                </button>
               </form>
 
               {/* Resource Management */}
