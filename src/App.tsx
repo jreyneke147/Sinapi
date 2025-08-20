@@ -71,7 +71,7 @@ function App() {
               <Building2 className="w-8 h-8 text-blue-200" />
               <div>
                 <h1 className="text-xl font-bold">Sinapi</h1>
-                <p className="text-xs text-blue-200">Medical Technologies</p>
+                <p className="text-xs text-blue-200"></p>
               </div>
             </div>
             
