@@ -5,8 +5,8 @@ export function generateQRCode(url: string): string {
     size: '200x200',
     data: url,
     format: 'png',
-    bgcolor: '36454F',
-    color: '36454F'
+    color: '36454F',
+    bgcolor: 'FFFFFF'
   });
   
   return `${qrApiUrl}?${params.toString()}`;
