@@ -1,6 +1,16 @@
-import React, { useState } from 'react';
-import { Search, Download, FileText, User, Lock, Eye, EyeOff, Plus, Trash2, Menu } from 'lucide-react';
-import { uploadResourceFile } from './storage';
+import React, { useState, useEffect } from 'react';
+import {
+  Search,
+  Download,
+  FileText,
+  User,
+  Lock,
+  Eye,
+  EyeOff,
+  Plus,
+  Trash2,
+  Menu,
+} from 'lucide-react';
 
 interface Resource {
   id: string;
@@ -24,18 +34,30 @@ function App() {
   const [newResource, setNewResource] = useState({
     title: '',
     description: '',
-    category: ''
+    category: '',
   });
   const [newFile, setNewFile] = useState<File | null>(null);
 
-  const categories = ['all', ...new Set(resources.map(r => r.category))];
+  const categories = ['all', ...new Set(resources.map((r) => r.category))];
 
-  const filteredResources = resources.filter(resource => {
-    const matchesSearch = resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         resource.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || resource.category === selectedCategory;
+  const filteredResources = resources.filter((resource) => {
+    const q = searchQuery.toLowerCase();
+    const matchesSearch =
+      resource.title.toLowerCase().includes(q) ||
+      resource.description.toLowerCase().includes(q);
+    const matchesCategory =
+      selectedCategory === 'all' || resource.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  // Cleanup: revoke any blob: URLs when a resource is removed or component unmounts
+  useEffect(() => {
+    return () => {
+      resources.forEach((r) => {
+        if (r.fileUrl?.startsWith('blob:')) URL.revokeObjectURL(r.fileUrl);
+      });
+    };
+  }, [resources]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,28 +70,27 @@ function App() {
     }
   };
 
-  const handleAddResource = async (e: React.FormEvent) => {
+  const handleAddResource = (e: React.FormEvent) => {
     e.preventDefault();
     if (newResource.title && newResource.description && newResource.category && newFile) {
-      try {
-        const fileUrl = await uploadResourceFile(newFile);
-        const resource: Resource = {
-          id: Date.now().toString(),
-          ...newResource,
-          fileUrl,
-          uploadedAt: new Date().toISOString().split('T')[0]
-        };
-        setResources(prev => [...prev, resource]);
-        setNewResource({ title: '', description: '', category: '' });
-        setNewFile(null);
-      } catch (error) {
-        console.error('Error uploading file', error);
-      }
+      const resource: Resource = {
+        id: Date.now().toString(),
+        ...newResource,
+        fileUrl: URL.createObjectURL(newFile),
+        uploadedAt: new Date().toISOString().split('T')[0],
+      };
+      setResources((prev) => [resource, ...prev]);
+      setNewResource({ title: '', description: '', category: '' });
+      setNewFile(null);
     }
   };
 
   const handleDeleteResource = (id: string) => {
-    setResources(prev => prev.filter(r => r.id !== id));
+    setResources((prev) => {
+      const victim = prev.find((r) => r.id === id);
+      if (victim?.fileUrl?.startsWith('blob:')) URL.revokeObjectURL(victim.fileUrl);
+      return prev.filter((r) => r.id !== id);
+    });
   };
 
   const ResourceCard = ({ resource }: { resource: Resource }) => (
@@ -79,25 +100,24 @@ function App() {
           <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
             {resource.title}
           </h3>
-          <p className="text-gray-600 text-sm mb-3 line-clamp-3">
-            {resource.description}
-          </p>
+          <p className="text-gray-600 text-sm mb-3 line-clamp-3">{resource.description}</p>
           <span className="inline-block px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
             {resource.category}
           </span>
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <span className="text-xs text-gray-500">
-            Added {resource.uploadedAt}
-          </span>
-          <button
-            onClick={() => window.open(resource.fileUrl, '_blank')}
+          <span className="text-xs text-gray-500">Added {resource.uploadedAt}</span>
+
+          {/* Use a real download link */}
+          <a
+            href={resource.fileUrl}
+            download={resource.title.replace(/\s+/g, '_')}
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200"
           >
             <Download className="w-4 h-4 mr-2" />
             Download
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -111,19 +131,21 @@ function App() {
           <div className="flex items-center">
             <img src="/sinapi-logo.svg" alt="Sinapi Biomedical logo" className="h-8 w-auto" />
           </div>
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex items-center space-x-2"
-          >
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="flex items-center space-x-2">
             <span className="font-medium">Menu</span>
             <Menu className="w-5 h-5" />
           </button>
         </div>
         {isMenuOpen && (
           <nav className="absolute right-4 top-16 bg-white text-gray-900 shadow-lg rounded-md py-2 w-40">
-            <a href="#manuals" className="block px-4 py-2 hover:bg-gray-100">Manuals</a>
+            <a href="#manuals" className="block px-4 py-2 hover:bg-gray-100">
+              Manuals
+            </a>
             <button
-              onClick={() => { setIsAdminOpen(!isAdminOpen); setIsMenuOpen(false); }}
+              onClick={() => {
+                setIsAdminOpen(!isAdminOpen);
+                setIsMenuOpen(false);
+              }}
               className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2"
             >
               <User className="w-4 h-4" />
@@ -171,7 +193,7 @@ function App() {
             />
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
-            {categories.map(category => (
+            {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
@@ -209,7 +231,7 @@ function App() {
                   />
                   <div className="relative">
                     <input
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Password"
@@ -230,28 +252,23 @@ function App() {
                   >
                     Login
                   </button>
-                  <p className="text-sm text-gray-600 text-center">
-                    Demo credentials: admin / demo
-                  </p>
+                  <p className="text-sm text-gray-600 text-center">Demo credentials: admin / demo</p>
                 </div>
               </form>
             ) : (
               <div className="bg-white rounded-lg shadow-md p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-semibold text-gray-900">Resource Management</h3>
-                  <button
-                    onClick={() => setIsLoggedIn(false)}
-                    className="text-red-600 hover:text-red-700 text-sm"
-                  >
+                  <button onClick={() => setIsLoggedIn(false)} className="text-red-600 hover:text-red-700 text-sm">
                     Logout
                   </button>
                 </div>
-                
+
                 <form onSubmit={handleAddResource} className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
                   <input
                     type="text"
                     value={newResource.title}
-                    onChange={(e) => setNewResource(prev => ({ ...prev, title: e.target.value }))}
+                    onChange={(e) => setNewResource((prev) => ({ ...prev, title: e.target.value }))}
                     placeholder="Title"
                     className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     required
@@ -259,7 +276,7 @@ function App() {
                   <input
                     type="text"
                     value={newResource.description}
-                    onChange={(e) => setNewResource(prev => ({ ...prev, description: e.target.value }))}
+                    onChange={(e) => setNewResource((prev) => ({ ...prev, description: e.target.value }))}
                     placeholder="Description"
                     className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     required
@@ -267,13 +284,14 @@ function App() {
                   <input
                     type="text"
                     value={newResource.category}
-                    onChange={(e) => setNewResource(prev => ({ ...prev, category: e.target.value }))}
+                    onChange={(e) => setNewResource((prev) => ({ ...prev, category: e.target.value }))}
                     placeholder="Category"
                     className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     required
                   />
                   <input
                     type="file"
+                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                     onChange={(e) => setNewFile(e.target.files?.[0] || null)}
                     className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     required
@@ -297,7 +315,7 @@ function App() {
                       </tr>
                     </thead>
                     <tbody>
-                      {resources.map(resource => (
+                      {resources.map((resource) => (
                         <tr key={resource.id} className="border-b border-gray-100">
                           <td className="py-2 px-3 font-medium">{resource.title}</td>
                           <td className="py-2 px-3">{resource.category}</td>
@@ -339,7 +357,7 @@ function App() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredResources.map(manual => (
+              {filteredResources.map((manual) => (
                 <ResourceCard key={manual.id} resource={manual} />
               ))}
             </div>
@@ -370,14 +388,20 @@ function App() {
             <div>
               <h4 className="font-semibold mb-4">Quick Links</h4>
               <div className="text-gray-400 space-y-2">
-                <a href="#manuals" className="block hover:text-white transition-colors">Manuals</a>
-                <a href="#" className="block hover:text-white transition-colors">Technical Support</a>
-                <a href="#" className="block hover:text-white transition-colors">Contact Us</a>
+                <a href="#manuals" className="block hover:text-white transition-colors">
+                  Manuals
+                </a>
+                <a href="#" className="block hover:text-white transition-colors">
+                  Technical Support
+                </a>
+                <a href="#" className="block hover:text-white transition-colors">
+                  Contact Us
+                </a>
               </div>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Sinapi Medical Technologies. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Sinapi Medical Technologies. All rights reserved.</p>
           </div>
         </div>
       </footer>
