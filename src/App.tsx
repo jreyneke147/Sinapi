@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Download, FileText, Bookmark, User, Lock, Eye, EyeOff, Plus, Trash2, Menu } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Download, FileText, User, Lock, Eye, EyeOff, Plus, Trash2, Menu } from 'lucide-react';
+import { uploadResourceFile } from './storage';
 
 interface Resource {
   id: string;
@@ -47,18 +48,23 @@ function App() {
     }
   };
 
-  const handleAddResource = (e: React.FormEvent) => {
+  const handleAddResource = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newResource.title && newResource.description && newResource.category && newFile) {
-      const resource: Resource = {
-        id: Date.now().toString(),
-        ...newResource,
-        fileUrl: URL.createObjectURL(newFile),
-        uploadedAt: new Date().toISOString().split('T')[0]
-      };
-      setResources(prev => [...prev, resource]);
-      setNewResource({ title: '', description: '', category: '' });
-      setNewFile(null);
+      try {
+        const fileUrl = await uploadResourceFile(newFile);
+        const resource: Resource = {
+          id: Date.now().toString(),
+          ...newResource,
+          fileUrl,
+          uploadedAt: new Date().toISOString().split('T')[0]
+        };
+        setResources(prev => [...prev, resource]);
+        setNewResource({ title: '', description: '', category: '' });
+        setNewFile(null);
+      } catch (error) {
+        console.error('Error uploading file', error);
+      }
     }
   };
 
