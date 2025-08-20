@@ -6,9 +6,7 @@ interface Resource {
   title: string;
   description: string;
   category: string;
-  type: 'manual' | 'brochure';
   fileUrl: string;
-  qrCode: string;
   uploadedAt: string;
 }
 
@@ -25,76 +23,9 @@ function App() {
   const [newResource, setNewResource] = useState({
     title: '',
     description: '',
-    category: '',
-    type: 'manual' as 'manual' | 'brochure'
+    category: ''
   });
-
-  // Mock data
-  useEffect(() => {
-    const mockResources: Resource[] = [
-      {
-        id: '1',
-        title: 'X-Ray Machine Operation Manual',
-        description: 'Complete guide for operating the SinapiMax X-Ray System including safety protocols and maintenance procedures.',
-        category: 'X-Ray Systems',
-        type: 'manual',
-        fileUrl: '#',
-        qrCode: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjZmZmIi8+PC9zdmc+',
-        uploadedAt: '2024-01-15'
-      },
-      {
-        id: '2',
-        title: 'MRI Scanner Safety Guidelines',
-        description: 'Essential safety protocols and operational guidelines for the SinapiCore MRI Scanner series.',
-        category: 'MRI Systems',
-        type: 'manual',
-        fileUrl: '#',
-        qrCode: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjE1IiB5PSIxNSIgd2lkdGg9IjcwIiBoZWlnaHQ9IjcwIiBmaWxsPSIjZmZmIi8+PC9zdmc+',
-        uploadedAt: '2024-01-10'
-      },
-      {
-        id: '3',
-        title: 'Ultrasound Device User Guide',
-        description: 'Comprehensive user manual for SinapiSound Pro ultrasound devices with advanced imaging features.',
-        category: 'Ultrasound Systems',
-        type: 'manual',
-        fileUrl: '#',
-        qrCode: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjI1IiB5PSIyNSIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjZmZmIi8+PC9zdmc+',
-        uploadedAt: '2024-01-20'
-      },
-      {
-        id: '4',
-        title: 'SinapiMax X-Ray Product Brochure',
-        description: 'Detailed specifications and features overview of our flagship X-Ray imaging system.',
-        category: 'X-Ray Systems',
-        type: 'brochure',
-        fileUrl: '#',
-        qrCode: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjZmZmIi8+PC9zdmc+',
-        uploadedAt: '2024-01-18'
-      },
-      {
-        id: '5',
-        title: 'MRI Technology Overview',
-        description: 'Technical specifications and clinical applications of SinapiCore MRI systems.',
-        category: 'MRI Systems',
-        type: 'brochure',
-        fileUrl: '#',
-        qrCode: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIwIiB5PSIzMCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjZmZmIi8+PC9zdmc+',
-        uploadedAt: '2024-01-12'
-      },
-      {
-        id: '6',
-        title: 'Portable Ultrasound Solutions',
-        description: 'Product lineup showcasing our portable and handheld ultrasound devices for various clinical needs.',
-        category: 'Ultrasound Systems',
-        type: 'brochure',
-        fileUrl: '#',
-        qrCode: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjMwIiB5PSIyMCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjZmZmIi8+PC9zdmc+',
-        uploadedAt: '2024-01-22'
-      }
-    ];
-    setResources(mockResources);
-  }, []);
+  const [newFile, setNewFile] = useState<File | null>(null);
 
   const categories = ['all', ...new Set(resources.map(r => r.category))];
 
@@ -104,9 +35,6 @@ function App() {
     const matchesCategory = selectedCategory === 'all' || resource.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
-
-  const manuals = filteredResources.filter(r => r.type === 'manual');
-  const brochures = filteredResources.filter(r => r.type === 'brochure');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,16 +49,16 @@ function App() {
 
   const handleAddResource = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newResource.title && newResource.description && newResource.category) {
+    if (newResource.title && newResource.description && newResource.category && newFile) {
       const resource: Resource = {
         id: Date.now().toString(),
         ...newResource,
-        fileUrl: '#',
-        qrCode: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjZmZmIi8+PC9zdmc+',
+        fileUrl: URL.createObjectURL(newFile),
         uploadedAt: new Date().toISOString().split('T')[0]
       };
       setResources(prev => [...prev, resource]);
-      setNewResource({ title: '', description: '', category: '', type: 'manual' });
+      setNewResource({ title: '', description: '', category: '' });
+      setNewFile(null);
     }
   };
 
@@ -141,25 +69,18 @@ function App() {
   const ResourceCard = ({ resource }: { resource: Resource }) => (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
       <div className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-              {resource.title}
-            </h3>
-            <p className="text-gray-600 text-sm mb-3 line-clamp-3">
-              {resource.description}
-            </p>
-            <span className="inline-block px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-              {resource.category}
-            </span>
-          </div>
-          <img 
-            src={resource.qrCode} 
-            alt="QR Code" 
-            className="w-12 h-12 ml-4 border border-gray-200 rounded"
-          />
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+            {resource.title}
+          </h3>
+          <p className="text-gray-600 text-sm mb-3 line-clamp-3">
+            {resource.description}
+          </p>
+          <span className="inline-block px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+            {resource.category}
+          </span>
         </div>
-        
+
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
           <span className="text-xs text-gray-500">
             Added {resource.uploadedAt}
@@ -195,7 +116,6 @@ function App() {
         {isMenuOpen && (
           <nav className="absolute right-4 top-16 bg-white text-gray-900 shadow-lg rounded-md py-2 w-40">
             <a href="#manuals" className="block px-4 py-2 hover:bg-gray-100">Manuals</a>
-            <a href="#brochures" className="block px-4 py-2 hover:bg-gray-100">Brochures</a>
             <button
               onClick={() => { setIsAdminOpen(!isAdminOpen); setIsMenuOpen(false); }}
               className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2"
@@ -240,7 +160,7 @@ function App() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search manuals and brochures..."
+              placeholder="Search manuals..."
               className="w-full pl-12 pr-4 py-3 rounded-lg border border-blue-200 text-gray-900 focus:ring-blue-600 focus:border-blue-600"
             />
           </div>
@@ -321,7 +241,7 @@ function App() {
                   </button>
                 </div>
                 
-                <form onSubmit={handleAddResource} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <form onSubmit={handleAddResource} className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
                   <input
                     type="text"
                     value={newResource.title}
@@ -346,22 +266,18 @@ function App() {
                     className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     required
                   />
-                  <div className="flex space-x-2">
-                    <select
-                      value={newResource.type}
-                      onChange={(e) => setNewResource(prev => ({ ...prev, type: e.target.value as 'manual' | 'brochure' }))}
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="manual">Manual</option>
-                      <option value="brochure">Brochure</option>
-                    </select>
-                    <button
-                      type="submit"
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
-                  </div>
+                  <input
+                    type="file"
+                    onChange={(e) => setNewFile(e.target.files?.[0] || null)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
                 </form>
 
                 <div className="overflow-x-auto">
@@ -369,7 +285,6 @@ function App() {
                     <thead>
                       <tr className="border-b border-gray-200">
                         <th className="text-left py-2 px-3">Title</th>
-                        <th className="text-left py-2 px-3">Type</th>
                         <th className="text-left py-2 px-3">Category</th>
                         <th className="text-left py-2 px-3">Date</th>
                         <th className="text-center py-2 px-3">Actions</th>
@@ -379,15 +294,6 @@ function App() {
                       {resources.map(resource => (
                         <tr key={resource.id} className="border-b border-gray-100">
                           <td className="py-2 px-3 font-medium">{resource.title}</td>
-                          <td className="py-2 px-3">
-                            <span className={`px-2 py-1 text-xs rounded-full ${
-                              resource.type === 'manual' 
-                                ? 'bg-blue-100 text-blue-700' 
-                                : 'bg-green-100 text-green-700'
-                            }`}>
-                              {resource.type}
-                            </span>
-                          </td>
                           <td className="py-2 px-3">{resource.category}</td>
                           <td className="py-2 px-3">{resource.uploadedAt}</td>
                           <td className="py-2 px-3 text-center">
@@ -416,43 +322,19 @@ function App() {
             <FileText className="w-8 h-8 text-blue-600 mr-3" />
             <h2 className="text-3xl font-bold text-gray-900">How-to Manuals</h2>
             <span className="ml-4 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-              {manuals.length} available
+              {filteredResources.length} available
             </span>
           </div>
-          
-          {manuals.length === 0 ? (
+
+          {filteredResources.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-lg shadow-sm">
               <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500">No manuals found matching your search criteria.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {manuals.map(manual => (
+              {filteredResources.map(manual => (
                 <ResourceCard key={manual.id} resource={manual} />
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* Brochures Section */}
-        <section id="brochures">
-          <div className="flex items-center mb-8">
-            <Bookmark className="w-8 h-8 text-green-600 mr-3" />
-            <h2 className="text-3xl font-bold text-gray-900">Product Brochures</h2>
-            <span className="ml-4 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-              {brochures.length} available
-            </span>
-          </div>
-          
-          {brochures.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-              <Bookmark className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">No brochures found matching your search criteria.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {brochures.map(brochure => (
-                <ResourceCard key={brochure.id} resource={brochure} />
               ))}
             </div>
           )}
@@ -483,7 +365,6 @@ function App() {
               <h4 className="font-semibold mb-4">Quick Links</h4>
               <div className="text-gray-400 space-y-2">
                 <a href="#manuals" className="block hover:text-white transition-colors">Manuals</a>
-                <a href="#brochures" className="block hover:text-white transition-colors">Brochures</a>
                 <a href="#" className="block hover:text-white transition-colors">Technical Support</a>
                 <a href="#" className="block hover:text-white transition-colors">Contact Us</a>
               </div>
