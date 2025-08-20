@@ -35,6 +35,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
       setEmail('');
       setPassword('');
     } catch (error) {
+      console.error(error);
       alert('Login failed. Please check your credentials.');
     } finally {
       setIsLoading(false);
@@ -49,7 +50,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     try {
       // Upload file to Supabase storage
       const fileUrl = await uploadFile(newFile);
-      
+
       // Generate QR code
       const qrCode = generateQRCode(fileUrl);
 
@@ -64,12 +65,12 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
       // Reset form
       setNewResource({ title: '', description: '', category: '', type: 'manual' });
       setNewFile(null);
-      
+
       // Reset file input
       const fileInput = document.getElementById('file-input') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
-      
     } catch (error) {
+      console.error(error);
       alert('Failed to add resource. Please try again.');
     } finally {
       setIsLoading(false);
@@ -78,11 +79,12 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
   const handleDeleteResource = async (id: string) => {
     if (confirm('Are you sure you want to delete this resource?')) {
-      try {
-        await deleteResource(id);
-      } catch (error) {
-        alert('Failed to delete resource. Please try again.');
-      }
+        try {
+          await deleteResource(id);
+        } catch (error) {
+          console.error(error);
+          alert('Failed to delete resource. Please try again.');
+        }
     }
   };
 
