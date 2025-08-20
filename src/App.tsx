@@ -6,9 +6,6 @@ import {
   Menu,
   X,
   Building2,
-  Phone,
-  Mail,
-  MapPin,
 } from 'lucide-react';
 import { useResources } from './hooks/useResources';
 import { ResourceCard } from './components/ResourceCard';
@@ -175,68 +172,14 @@ function App() {
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <div className="flex items-center mb-4">
-                <Building2 className="w-8 h-8 text-blue-400 mr-2" />
-                <div>
-                  <h3 className="text-xl font-bold">Sinapi</h3>
-                  <p className="text-sm text-gray-400">Medical Technologies</p>
-                </div>
-              </div>
-              <p className="text-gray-400">
-                Leading provider of advanced medical imaging technology and ICU solutions 
-                designed for evidence-based patient care.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-4 flex items-center">
-                <Phone className="w-4 h-4 mr-2" />
-                Contact Information
-              </h4>
-              <div className="text-gray-400 space-y-2">
-                <p className="flex items-center">
-                  <Phone className="w-4 h-4 mr-2" />
-                  +1 (555) 123-4567
-                </p>
-                <p className="flex items-center">
-                  <Mail className="w-4 h-4 mr-2" />
-                  support@sinapi.com
-                </p>
-                <p className="flex items-center">
-                  <Mail className="w-4 h-4 mr-2" />
-                  tech@sinapi.com
-                </p>
-                <p className="flex items-center">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  Medical District, Healthcare Plaza
-                </p>
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-4">Quick Access</h4>
-              <div className="text-gray-400 space-y-2">
-                <a href="#manuals" className="block hover:text-white transition-colors">
-                  How-to Manuals
-                </a>
-                <button
-                  onClick={() => setIsAdminOpen(true)}
-                  className="block hover:text-white transition-colors text-left"
-                >
-                  Admin Access
-                </button>
-                <a href="mailto:tech@sinapi.com" className="block hover:text-white transition-colors">
-                  Technical Support
-                </a>
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; {new Date().getFullYear()} Sinapi Medical Technologies. All rights reserved.</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h3 className="text-xl font-bold">Sinapi Medical Technologies</h3>
+          <p className="text-gray-400 mt-4">
+            Leading provider of advanced medical imaging technology and ICU solutions
+            designed for evidence-based patient care.
+          </p>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-gray-400">
+            <p>© 2025 Sinapi Medical Technologies. All rights reserved.</p>
           </div>
         </div>
       </footer>
