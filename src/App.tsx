@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Download, FileText, Bookmark, User, Lock, Eye, EyeOff, Plus, Trash2, Building2, Menu } from 'lucide-react';
+import { Search, Download, FileText, Bookmark, User, Lock, Eye, EyeOff, Plus, Trash2, Menu } from 'lucide-react';
 
 interface Resource {
   id: string;
@@ -181,11 +181,8 @@ function App() {
       {/* Header */}
       <header className="relative bg-gradient-to-r from-blue-900 to-blue-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-              <Building2 className="w-5 h-5 text-blue-700" />
-            </div>
-            <span className="text-xl font-bold">Sinapi</span>
+          <div className="flex items-center">
+            <img src="/sinapi-logo.svg" alt="Sinapi Biomedical logo" className="h-8 w-auto" />
           </div>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -467,11 +464,8 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <Building2 className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="text-xl font-bold">Sinapi</h3>
+              <div className="flex items-center mb-4">
+                <img src="/sinapi-logo.svg" alt="Sinapi Biomedical logo" className="h-8 w-auto" />
               </div>
               <p className="text-gray-400">
                 Leading provider of advanced medical imaging technology and solutions.
