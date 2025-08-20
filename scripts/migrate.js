@@ -55,14 +55,6 @@ async function runMigration() {
           type: 'manual',
           file_url: 'https://example.com/manual-x100.pdf',
           file_name: 'manual-x100.pdf'
-        },
-        {
-          title: 'Product Brochure - X100 Series',
-          description: 'Overview of the X100 series features and specifications',
-          category: 'Medical Devices',
-          type: 'brochure',
-          file_url: 'https://example.com/brochure-x100.pdf',
-          file_name: 'brochure-x100.pdf'
         }
       ]);
     

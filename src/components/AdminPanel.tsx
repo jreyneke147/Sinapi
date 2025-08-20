@@ -22,7 +22,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     title: '',
     description: '',
     category: '',
-    type: 'manual' as 'manual' | 'brochure',
+    type: 'manual' as const,
   });
   const [newFile, setNewFile] = useState<File | null>(null);
   const [translations, setTranslations] = useState<{ language: string; file: File | null }[]>([]);
@@ -222,15 +222,6 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                     className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     required
                   />
-                  <select
-                    value={newResource.type}
-                    onChange={(e) => setNewResource(prev => ({ ...prev, type: e.target.value as 'manual' | 'brochure' }))}
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    required
-                  >
-                    <option value="manual">Manual</option>
-                    <option value="brochure">Brochure</option>
-                  </select>
                   <input
                     id="file-input"
                     type="file"

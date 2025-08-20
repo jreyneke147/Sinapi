@@ -3,7 +3,7 @@ export interface Resource {
   title: string;
   description: string;
   category: string;
-  type: 'manual' | 'brochure';
+  type: 'manual';
   file_url: string;
   file_name: string;
   translations?: {

@@ -1,5 +1,5 @@
 /*
-  # Create resources table for manuals and brochures
+  # Create resources table for manuals
 
   1. New Tables
     - `resources`
@@ -7,7 +7,7 @@
       - `title` (text, not null)
       - `description` (text, not null)
       - `category` (text, not null)
-      - `type` (text, not null) - 'manual' or 'brochure'
+      - `type` (text, not null) - always 'manual'
       - `file_url` (text, not null)
       - `file_name` (text, not null)
       - `qr_code` (text)
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS resources (
   title text NOT NULL,
   description text NOT NULL,
   category text NOT NULL,
-  type text NOT NULL CHECK (type IN ('manual', 'brochure')),
+  type text NOT NULL CHECK (type IN ('manual')),
   file_url text NOT NULL,
   file_name text NOT NULL,
   qr_code text,
@@ -94,7 +94,4 @@ CREATE POLICY "Authenticated users can delete resource files"
 INSERT INTO resources (title, description, category, type, file_url, file_name, qr_code) VALUES
 ('ICU Mobility Protocol', 'Comprehensive guide for implementing early mobility protocols in intensive care units', 'ICU Equipment', 'manual', 'https://example.com/sample.pdf', 'icu_mobility_protocol.pdf', 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://example.com/sample.pdf'),
 ('Patient Transfer Guidelines', 'Step-by-step instructions for safe patient transfers using mechanical aids', 'Patient Care', 'manual', 'https://example.com/sample.pdf', 'patient_transfer_guidelines.pdf', 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://example.com/sample.pdf'),
-('Equipment Maintenance Schedule', 'Regular maintenance procedures and schedules for all medical equipment', 'Maintenance', 'manual', 'https://example.com/sample.pdf', 'equipment_maintenance.pdf', 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://example.com/sample.pdf'),
-('MobilityLift Pro Series', 'Product specifications and features for the MobilityLift Pro patient lifting system', 'Lifting Systems', 'brochure', 'https://example.com/sample.pdf', 'mobilitylift_pro_brochure.pdf', 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://example.com/sample.pdf'),
-('SmartBed Technology', 'Advanced features and benefits of our intelligent hospital bed systems', 'Smart Beds', 'brochure', 'https://example.com/sample.pdf', 'smartbed_technology.pdf', 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://example.com/sample.pdf'),
-('Rehabilitation Equipment Catalog', 'Complete catalog of rehabilitation and physical therapy equipment', 'Rehabilitation', 'brochure', 'https://example.com/sample.pdf', 'rehab_equipment_catalog.pdf', 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://example.com/sample.pdf');
+('Equipment Maintenance Schedule', 'Regular maintenance procedures and schedules for all medical equipment', 'Maintenance', 'manual', 'https://example.com/sample.pdf', 'equipment_maintenance.pdf', 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://example.com/sample.pdf');
