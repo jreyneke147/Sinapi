@@ -1,9 +1,6 @@
 import React from 'react';
 import { Download, QrCode, Trash2, Eye } from 'lucide-react';
-import { Document, Page, pdfjs } from 'react-pdf';
 import { Resource } from '../types';
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 interface ResourceCardProps {
   resource: Resource;
@@ -13,8 +10,6 @@ interface ResourceCardProps {
 
 export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCardProps) {
   const [showQR, setShowQR] = React.useState(false);
-  const [showViewer, setShowViewer] = React.useState(false);
-  const [numPages, setNumPages] = React.useState(0);
   const [selectedLanguage, setSelectedLanguage] = React.useState('original');
 
   const currentTranslation =
@@ -79,13 +74,15 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
                 <QrCode className="w-4 h-4" />
               </button>
 
-              <button
-                onClick={() => setShowViewer(true)}
+              <a
+                href={fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex w-full sm:w-auto justify-center items-center px-4 py-2 bg-transparent text-blue-600 border border-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors duration-200"
               >
                 <Eye className="w-4 h-4 mr-2" />
                 View
-              </button>
+              </a>
 
               <button
                 onClick={handleDownload}
@@ -114,35 +111,6 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
               alt="QR Code"
               className="mx-auto w-32 h-32 border border-gray-200 rounded-lg"
             />
-          </div>
-        )}
-        {showViewer && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg w-11/12 md:w-3/4 h-5/6 flex flex-col">
-              <div className="flex justify-end p-2">
-                <button
-                  onClick={() => setShowViewer(false)}
-                  className="text-gray-700 hover:text-gray-900"
-                >
-                  Close
-                </button>
-              </div>
-              <div className="flex-1 overflow-auto px-2">
-                <Document
-                  file={fileUrl}
-                  onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-                  onLoadError={console.error}
-                >
-                  {Array.from(new Array(numPages), (_el, index) => (
-                    <Page
-                      key={`page_${index + 1}`}
-                      pageNumber={index + 1}
-                      width={800}
-                    />
-                  ))}
-                </Document>
-              </div>
-            </div>
           </div>
         )}
       </div>
