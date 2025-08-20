@@ -10,6 +10,12 @@ interface ResourceCardProps {
 
 export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCardProps) {
   const [showQR, setShowQR] = React.useState(false);
+  const [selectedLanguage, setSelectedLanguage] = React.useState('original');
+
+  const currentTranslation =
+    resource.translations?.find(t => t.language === selectedLanguage);
+  const fileUrl = currentTranslation?.file_url || resource.file_url;
+  const fileName = currentTranslation?.file_name || resource.file_name;
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
@@ -30,6 +36,20 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
           </span>
 
           <div className="flex items-center space-x-2">
+            {resource.translations && resource.translations.length > 0 && (
+              <select
+                value={selectedLanguage}
+                onChange={(e) => setSelectedLanguage(e.target.value)}
+                className="px-2 py-1 border border-gray-300 rounded text-sm"
+              >
+                <option value="original">Original</option>
+                {resource.translations.map((t) => (
+                  <option key={t.language} value={t.language}>
+                    {t.language}
+                  </option>
+                ))}
+              </select>
+            )}
             <button
               onClick={() => setShowQR(!showQR)}
               className="inline-flex items-center px-3 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200"
@@ -38,7 +58,7 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
             </button>
 
             <a
-              href={resource.file_url}
+              href={fileUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors duration-200"
@@ -48,8 +68,8 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
             </a>
 
             <a
-              href={resource.file_url}
-              download={resource.file_name}
+              href={fileUrl}
+              download={fileName}
               className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200"
             >
               <Download className="w-4 h-4 mr-2" />
