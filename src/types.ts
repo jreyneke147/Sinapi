@@ -6,6 +6,11 @@ export interface Resource {
   type: 'manual' | 'brochure';
   file_url: string;
   file_name: string;
+  translations?: {
+    language: string;
+    file_url: string;
+    file_name: string;
+  }[];
   qr_code?: string;
   created_at: string;
   updated_at: string;
