@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, QrCode, Trash2 } from 'lucide-react';
+import { Download, QrCode, Trash2, Eye } from 'lucide-react';
 import { Resource } from '../types';
 
 interface ResourceCardProps {
@@ -36,6 +36,16 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
             >
               <QrCode className="w-4 h-4" />
             </button>
+
+            <a
+              href={resource.file_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors duration-200"
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              View
+            </a>
 
             <a
               href={resource.file_url}
