@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Download, Upload, FileText, Bookmark, QrCode, User, Lock, Eye, EyeOff, Plus, Trash2, Building2 } from 'lucide-react';
+import { Search, Download, FileText, Bookmark, User, Lock, Eye, EyeOff, Plus, Trash2, Building2, Menu } from 'lucide-react';
 
 interface Resource {
   id: string;
@@ -21,6 +21,7 @@ function App() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [resources, setResources] = useState<Resource[]>([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [newResource, setNewResource] = useState({
     title: '',
     description: '',
@@ -176,67 +177,85 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 font-sans">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Building2 className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900">Sinapi</h1>
+      <header className="relative bg-gradient-to-r from-blue-900 to-blue-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+              <Building2 className="w-5 h-5 text-blue-700" />
             </div>
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="#manuals" className="text-gray-600 hover:text-blue-600 transition-colors">Manuals</a>
-              <a href="#brochures" className="text-gray-600 hover:text-blue-600 transition-colors">Brochures</a>
-              <button 
-                onClick={() => setIsAdminOpen(!isAdminOpen)}
-                className="text-gray-600 hover:text-blue-600 transition-colors flex items-center space-x-1"
-              >
-                <User className="w-4 h-4" />
-                <span>Admin</span>
-              </button>
-            </nav>
+            <span className="text-xl font-bold">Sinapi</span>
           </div>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="flex items-center space-x-2"
+          >
+            <span className="font-medium">Menu</span>
+            <Menu className="w-5 h-5" />
+          </button>
         </div>
+        {isMenuOpen && (
+          <nav className="absolute right-4 top-16 bg-white text-gray-900 shadow-lg rounded-md py-2 w-40">
+            <a href="#manuals" className="block px-4 py-2 hover:bg-gray-100">Manuals</a>
+            <a href="#brochures" className="block px-4 py-2 hover:bg-gray-100">Brochures</a>
+            <button
+              onClick={() => { setIsAdminOpen(!isAdminOpen); setIsMenuOpen(false); }}
+              className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2"
+            >
+              <User className="w-4 h-4" />
+              <span>Admin</span>
+            </button>
+          </nav>
+        )}
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Medical Technology Resources
-          </h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto text-blue-100">
-            Access comprehensive manuals and product brochures for all Sinapi medical devices. 
-            Find what you need quickly with our intelligent search system.
+      <section className="bg-gradient-to-r from-blue-900 to-blue-600 text-white py-20">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-4xl font-bold mb-4">Evidence-first ICU Solutions</h2>
+          <p className="text-lg text-blue-100 mb-6">
+            Designed for clinicians who need measurable results and ERAS-aligned outcomes.
           </p>
-          
-          {/* Search Bar */}
-          <div className="max-w-2xl mx-auto">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search manuals and brochures..."
-                className="w-full pl-12 pr-4 py-4 rounded-lg text-gray-900 border-0 focus:ring-4 focus:ring-blue-300 focus:outline-none text-lg"
-              />
-            </div>
+          <div className="border-l border-blue-300 pl-6 mb-8">
+            <ul className="list-disc space-y-2">
+              <li>Early mobility</li>
+              <li>Less effort</li>
+              <li>Cost savings</li>
+            </ul>
           </div>
+          <div className="flex justify-center">
+            <img
+              src="https://placehold.co/600x200?text=Product+Illustration&bg=E5E7EB&fc=9CA3AF"
+              alt="Product illustration"
+              className="w-full max-w-md"
+            />
+          </div>
+        </div>
+      </section>
 
-          {/* Category Filter */}
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
+      {/* Search Section */}
+      <section className="py-12 bg-white">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search manuals and brochures..."
+              className="w-full pl-12 pr-4 py-3 rounded-lg border border-blue-200 text-gray-900 focus:ring-blue-600 focus:border-blue-600"
+            />
+          </div>
+          <div className="mt-6 flex flex-wrap gap-3">
             {categories.map(category => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   selectedCategory === category
-                    ? 'bg-white text-blue-600 shadow-lg'
-                    : 'bg-blue-700 text-blue-100 hover:bg-blue-600'
+                    ? 'bg-blue-700 text-white'
+                    : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
                 }`}
               >
                 {category === 'all' ? 'All Categories' : category}
