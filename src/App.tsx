@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from './supabaseClient';
 import {
   Search,
   Download,
@@ -59,14 +60,28 @@ function App() {
     };
   }, [resources]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Allow demo credentials for local testing
     if (username === 'admin' && password === 'demo') {
       setIsLoggedIn(true);
       setUsername('');
       setPassword('');
-    } else {
+      return;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: username,
+      password,
+    });
+
+    if (error) {
       alert('Invalid credentials. Use admin/demo');
+    } else {
+      setIsLoggedIn(true);
+      setUsername('');
+      setPassword('');
     }
   };
 
