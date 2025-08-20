@@ -95,11 +95,9 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
       setNewResource({ title: '', description: '', category: '', type: 'manual' });
       setNewFile(null);
       setTranslations([]);
-
       // Reset file input
       const fileInput = document.getElementById('file-input') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
-      
     } catch (error) {
       console.error(error);
       alert('Failed to add resource. Please try again.');
@@ -110,12 +108,12 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
   const handleDeleteResource = async (id: string) => {
     if (confirm('Are you sure you want to delete this resource?')) {
-      try {
-        await deleteResource(id);
-      } catch (error) {
-        console.error(error);
-        alert('Failed to delete resource. Please try again.');
-      }
+        try {
+          await deleteResource(id);
+        } catch (error) {
+          console.error(error);
+          alert('Failed to delete resource. Please try again.');
+        }
     }
   };
 

@@ -61,17 +61,17 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
               href={fileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors duration-200"
+              className="inline-flex items-center px-4 py-2 bg-transparent text-blue-600 border border-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors duration-200"
             >
               <Eye className="w-4 h-4 mr-2" />
               View
             </a>
 
             <a
-              href={fileUrl}
-              download={fileName}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200"
-            >
+              href={resource.file_url}
+              download={resource.file_name}
+              className="inline-flex items-center px-4 py-2 bg-transparent text-blue-600 border border-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors duration-200"
+>>            >
               <Download className="w-4 h-4 mr-2" />
               Download
             </a>
