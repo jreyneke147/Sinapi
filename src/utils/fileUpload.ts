@@ -4,7 +4,7 @@ export async function uploadFile(file: File): Promise<string> {
   const fileExt = file.name.split('.').pop();
   const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
   
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from('resources')
     .upload(fileName, file);
 
