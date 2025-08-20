@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Search,
   FileText,
-  BookOpen,
   User,
   Menu,
   X,
@@ -18,26 +17,25 @@ import { AdminPanel } from './components/AdminPanel';
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedType, setSelectedType] = useState<'all' | 'manual' | 'brochure'>('all');
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { resources, loading, error } = useResources();
 
-  const categories = ['all', ...new Set(resources.map((r) => r.category))];
+  const manualCategories = resources
+    .filter((r) => r.type === 'manual')
+    .map((r) => r.category);
+  const categories = ['all', ...new Set(manualCategories)];
 
-  const filteredResources = resources.filter((resource) => {
+  const manuals = resources.filter((resource) => {
+    if (resource.type !== 'manual') return false;
     const q = searchQuery.toLowerCase();
     const matchesSearch =
       resource.title.toLowerCase().includes(q) ||
       resource.description.toLowerCase().includes(q);
     const matchesCategory =
       selectedCategory === 'all' || resource.category === selectedCategory;
-    const matchesType = selectedType === 'all' || resource.type === selectedType;
-    return matchesSearch && matchesCategory && matchesType;
+    return matchesSearch && matchesCategory;
   });
-
-  const manuals = filteredResources.filter(r => r.type === 'manual');
-  const brochures = filteredResources.filter(r => r.type === 'brochure');
 
   if (loading) {
     return (
@@ -91,21 +89,13 @@ function App() {
           
           {isMenuOpen && (
             <nav className="absolute right-4 top-16 bg-white text-gray-900 shadow-lg rounded-lg py-2 w-48 z-50">
-              <a 
-                href="#manuals" 
+              <a
+                href="#manuals"
                 className="block px-4 py-3 hover:bg-gray-100 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <FileText className="w-4 h-4 inline mr-2" />
                 Manuals
-              </a>
-              <a 
-                href="#brochures" 
-                className="block px-4 py-3 hover:bg-gray-100 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <BookOpen className="w-4 h-4 inline mr-2" />
-                Brochures
               </a>
               <button
                 onClick={() => {
@@ -122,31 +112,9 @@ function App() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h2 className="text-5xl font-bold mb-6">Evidence-first ICU Solutions</h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-            Designed for clinicians who need measurable results and ERAS-aligned outcomes.
-            Access our comprehensive library of manuals and product information.
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div className="bg-blue-800 bg-opacity-50 rounded-lg p-6">
-              <h3 className="font-semibold mb-2">Early Mobility</h3>
-              <p className="text-blue-100 text-sm">Accelerate patient recovery with evidence-based protocols</p>
-            </div>
-            <div className="bg-blue-800 bg-opacity-50 rounded-lg p-6">
-              <h3 className="font-semibold mb-2">Less Effort</h3>
-              <p className="text-blue-100 text-sm">Reduce staff strain with intelligent assistance systems</p>
-            </div>
-            <div className="bg-blue-800 bg-opacity-50 rounded-lg p-6">
-              <h3 className="font-semibold mb-2">Cost Savings</h3>
-              <p className="text-blue-100 text-sm">Optimize resources while improving patient outcomes</p>
-            </div>
-          </div>
-
-          {/* Search Section */}
+      {/* Search Section */}
+      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-10">
+        <div className="max-w-6xl mx-auto px-4">
           <div className="max-w-2xl mx-auto">
             <div className="relative mb-6">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -154,25 +122,9 @@ function App() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search manuals and brochures..."
+                placeholder="Search manuals..."
                 className="w-full pl-12 pr-4 py-4 rounded-lg border-0 text-gray-900 focus:ring-4 focus:ring-blue-300 shadow-lg text-lg"
               />
-            </div>
-            
-            <div className="flex flex-wrap justify-center gap-3 mb-6">
-              {['all', 'manual', 'brochure'].map((type) => (
-                <button
-                  key={type}
-                  onClick={() => setSelectedType(type as 'all' | 'manual' | 'brochure')}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                    selectedType === type
-                      ? 'bg-white text-blue-700 shadow-lg'
-                      : 'bg-blue-800 bg-opacity-50 text-blue-100 hover:bg-opacity-70'
-                  }`}
-                >
-                  {type === 'all' ? 'All Resources' : type === 'manual' ? 'Manuals' : 'Brochures'}
-                </button>
-              ))}
             </div>
 
             <div className="flex flex-wrap justify-center gap-2">
@@ -219,29 +171,6 @@ function App() {
           )}
         </section>
 
-        {/* Brochures Section */}
-        <section id="brochures">
-          <div className="flex items-center mb-8">
-            <BookOpen className="w-8 h-8 text-blue-600 mr-3" />
-            <h2 className="text-3xl font-bold text-gray-900">Product Brochures</h2>
-            <span className="ml-4 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-              {brochures.length} available
-            </span>
-          </div>
-
-          {brochures.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-              <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">No brochures found matching your search criteria.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {brochures.map((brochure) => (
-                <ResourceCard key={brochure.id} resource={brochure} />
-              ))}
-            </div>
-          )}
-        </section>
       </main>
 
       {/* Footer */}
@@ -292,9 +221,6 @@ function App() {
               <div className="text-gray-400 space-y-2">
                 <a href="#manuals" className="block hover:text-white transition-colors">
                   How-to Manuals
-                </a>
-                <a href="#brochures" className="block hover:text-white transition-colors">
-                  Product Brochures
                 </a>
                 <button
                   onClick={() => setIsAdminOpen(true)}
