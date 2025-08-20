@@ -12,7 +12,7 @@ export function useResources() {
       setLoading(true);
       const { data, error } = await supabase
         .from('resources')
-        .select('*')
+        .select('id, title, description, category, type, file_url, file_name, qr_code, created_at, updated_at, translations')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
