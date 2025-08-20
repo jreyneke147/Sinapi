@@ -52,56 +52,56 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
             Added {new Date(resource.created_at).toLocaleDateString()}
           </span>
 
-          <div className="flex items-center space-x-2">
-            {resource.translations && resource.translations.length > 0 && (
-              <select
-                value={selectedLanguage}
-                onChange={(e) => setSelectedLanguage(e.target.value)}
-                className="px-2 py-1 border border-gray-300 rounded text-sm"
-              >
-                <option value="original">Original</option>
-                {resource.translations.map((t) => (
-                  <option key={t.language} value={t.language}>
-                    {t.language}
-                  </option>
-                ))}
-              </select>
-            )}
-            <button
-              onClick={() => setShowQR(!showQR)}
-              className="inline-flex items-center px-3 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200"
-            >
-              <QrCode className="w-4 h-4" />
-            </button>
-
-            <a
-              href={fileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2 bg-transparent text-blue-600 border border-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors duration-200"
-            >
-              <Eye className="w-4 h-4 mr-2" />
-              View
-            </a>
-
-            <button
-              onClick={handleDownload}
-              className="inline-flex items-center px-4 py-2 bg-transparent text-blue-600 border border-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors duration-200"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Download
-            </button>
-
-            {isAdmin && onDelete && (
+          <div className="flex flex-wrap items-center gap-2 justify-end">
+              {resource.translations && resource.translations.length > 0 && (
+                <select
+                  value={selectedLanguage}
+                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                  className="px-2 py-1 border border-gray-300 rounded text-sm flex-shrink-0"
+                >
+                  <option value="original">Original</option>
+                  {resource.translations.map((t) => (
+                    <option key={t.language} value={t.language}>
+                      {t.language}
+                    </option>
+                  ))}
+                </select>
+              )}
               <button
-                onClick={() => onDelete(resource.id)}
-                className="inline-flex items-center px-3 py-2 bg-red-100 text-red-700 text-sm font-medium rounded-lg hover:bg-red-200 transition-colors duration-200"
+                onClick={() => setShowQR(!showQR)}
+                className="inline-flex items-center px-3 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200 flex-shrink-0"
               >
-                <Trash2 className="w-4 h-4" />
+                <QrCode className="w-4 h-4" />
               </button>
-            )}
+
+              <a
+                href={fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-full sm:w-auto justify-center items-center px-4 py-2 bg-transparent text-blue-600 border border-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors duration-200"
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                View
+              </a>
+
+              <button
+                onClick={handleDownload}
+                className="inline-flex w-full sm:w-auto justify-center items-center px-4 py-2 bg-transparent text-blue-600 border border-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors duration-200"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </button>
+
+              {isAdmin && onDelete && (
+                <button
+                  onClick={() => onDelete(resource.id)}
+                  className="inline-flex items-center px-3 py-2 bg-red-100 text-red-700 text-sm font-medium rounded-lg hover:bg-red-200 transition-colors duration-200 flex-shrink-0"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
+            </div>
           </div>
-        </div>
 
         {showQR && resource.qr_code && (
           <div className="mt-4 pt-4 border-t border-gray-100 text-center">
