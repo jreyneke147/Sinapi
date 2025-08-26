@@ -55,18 +55,23 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
 
           <div className="flex flex-wrap items-center gap-2 justify-end">
               {resource.translations && resource.translations.length > 0 && (
-                <select
-                  value={selectedLanguage}
-                  onChange={(e) => setSelectedLanguage(e.target.value)}
-                  className="px-2 py-1 border border-gray-300 rounded text-sm flex-shrink-0"
-                >
-                  <option value="original">Original</option>
-                  {resource.translations.map((t) => (
-                    <option key={t.language} value={t.language}>
-                      {t.language}
-                    </option>
-                  ))}
-                </select>
+                <>
+                  <label htmlFor="language-select" className="text-sm text-gray-700 mr-2">Select Language:</label>
+                  <select
+                    id="language-select"
+                    aria-label="Select language"
+                    value={selectedLanguage}
+                    onChange={(e) => setSelectedLanguage(e.target.value)}
+                    className="px-2 py-1 border border-gray-300 rounded text-sm flex-shrink-0"
+                  >
+                    <option value="original">Original</option>
+                    {resource.translations.map((t) => (
+                      <option key={t.language} value={t.language}>
+                        {t.language}
+                      </option>
+                    ))}
+                  </select>
+                </>
               )}
               <button
                 onClick={() => setShowQR(!showQR)}
