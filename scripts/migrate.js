@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { config } from 'dotenv';
@@ -27,21 +27,30 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 async function runMigration() {
   try {
-    console.log('Running database migration...');
-    
-    // Read the migration file
-    const migrationPath = join(__dirname, '../supabase/migrations/create_resources_table.sql');
-    const migrationSQL = readFileSync(migrationPath, 'utf8');
-    
-    // Execute the migration
-    const { error } = await supabase.rpc('exec_sql', { sql: migrationSQL });
-    
-    if (error) {
-      console.error('Migration failed:', error);
+    console.log('Running database migrations...');
+
+    const migrationsDir = join(__dirname, '../supabase/migrations');
+    const migrationFiles = readdirSync(migrationsDir)
+      .filter((file) => file.endsWith('.sql'))
+      .sort();
+
+    if (migrationFiles.length === 0) {
+      console.error('No migration files found in supabase/migrations');
       process.exit(1);
     }
-    
-    console.log('Migration completed successfully!');
+
+    for (const file of migrationFiles) {
+      console.log(`Executing migration: ${file}`);
+      const migrationSQL = readFileSync(join(migrationsDir, file), 'utf8');
+      const { error } = await supabase.rpc('exec_sql', { sql: migrationSQL });
+
+      if (error) {
+        console.error(`Migration failed for ${file}:`, error);
+        process.exit(1);
+      }
+    }
+
+    console.log('All migrations executed successfully!');
     
     // Insert sample data
     console.log('Inserting sample data...');
