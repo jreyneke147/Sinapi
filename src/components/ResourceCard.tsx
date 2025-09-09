@@ -17,6 +17,8 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
     resource.translations?.find(t => t.language === selectedLanguage);
   const fileUrl = currentTranslation?.file_url || resource.file_url;
   const fileName = currentTranslation?.file_name || resource.file_name;
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+  const landingUrl = `${baseUrl}/?manual=${resource.id}`;
 
   const handleDownload = async () => {
     try {
@@ -111,9 +113,9 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
 
         {showQR && (
           <div className="mt-4 pt-4 border-t border-gray-100 text-center">
-            <p className="text-sm text-gray-600 mb-2">Scan to download</p>
+            <p className="text-sm text-gray-600 mb-2">Scan to open manual</p>
             <img
-              src={generateQRCode(fileUrl)}
+              src={generateQRCode(landingUrl)}
               alt="QR Code"
               className="mx-auto w-32 h-32 border border-gray-200 rounded-lg"
             />
