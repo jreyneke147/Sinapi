@@ -66,7 +66,7 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
                     onChange={(e) => setSelectedLanguage(e.target.value)}
                     className="px-2 py-1 border border-gray-300 rounded text-sm flex-shrink-0"
                   >
-                    <option value="original">Original</option>
+                    <option value="original">Cover Page</option>
                     {resource.translations.map((t) => (
                       <option key={t.language} value={t.language}>
                         {t.language}
