@@ -9,7 +9,7 @@ interface ManualLandingProps {
 
 export function ManualLanding({ id }: ManualLandingProps) {
   const [resource, setResource] = useState<Resource | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState('original');
+  const [selectedLanguage, setSelectedLanguage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,6 +26,7 @@ export function ManualLanding({ id }: ManualLandingProps) {
 
         if (error) throw error;
         setResource(data);
+        setSelectedLanguage(data.translations?.[0]?.language || '');
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load manual');
       } finally {
@@ -96,7 +97,6 @@ export function ManualLanding({ id }: ManualLandingProps) {
               onChange={(e) => setSelectedLanguage(e.target.value)}
               className="px-2 py-1 border border-gray-300 rounded text-sm"
             >
-              <option value="original">Cover Page</option>
               {resource.translations.map((t) => (
                 <option key={t.language} value={t.language}>
                   {t.language}
