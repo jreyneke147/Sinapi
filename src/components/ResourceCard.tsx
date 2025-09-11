@@ -47,7 +47,7 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
             {resource.title}
           </h3>
           <p className="text-gray-600 text-sm mb-3 line-clamp-3">{resource.description}</p>
-          <span className="inline-block px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+          <span className="inline-block px-3 py-1 text-xs font-medium bg-brand/10 text-brand rounded-full">
             {resource.category}
           </span>
         </div>
@@ -87,7 +87,7 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
                 href={fileUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex w-full sm:w-auto justify-center items-center px-4 py-2 bg-transparent text-blue-600 border border-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors duration-200"
+                className="inline-flex w-full sm:w-auto justify-center items-center px-4 py-2 bg-transparent text-brand border border-brand text-sm font-medium rounded-lg hover:bg-brand/10 transition-colors duration-200"
               >
                 <Eye className="w-4 h-4 mr-2" />
                 View
@@ -95,7 +95,7 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
 
               <button
                 onClick={handleDownload}
-                className="inline-flex w-full sm:w-auto justify-center items-center px-4 py-2 bg-transparent text-blue-600 border border-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors duration-200"
+                className="inline-flex w-full sm:w-auto justify-center items-center px-4 py-2 bg-transparent text-brand border border-brand text-sm font-medium rounded-lg hover:bg-brand/10 transition-colors duration-200"
               >
                 <Download className="w-4 h-4 mr-2" />
                 Download

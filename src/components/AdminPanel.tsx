@@ -134,7 +134,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
           {!isAuthenticated ? (
             <form onSubmit={handleLogin} className="max-w-md mx-auto">
               <h3 className="text-lg font-semibold text-gray-900 mb-6 text-center flex items-center justify-center">
-                <Lock className="w-5 h-5 mr-2 text-blue-600" />
+                <Lock className="w-5 h-5 mr-2 text-brand" />
                 Admin Login
               </h3>
               <div className="space-y-4">
@@ -143,7 +143,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent"
                   required
                 />
                 <div className="relative">
@@ -152,7 +152,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent pr-12"
                     required
                   />
                   <button
@@ -166,7 +166,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50"
+                  className="w-full bg-brand text-white py-3 rounded-lg hover:bg-brand transition-colors font-medium disabled:opacity-50"
                 >
                   {isLoading ? 'Logging in...' : 'Login'}
                 </button>
@@ -179,7 +179,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
             <div>
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center">
-                  <User className="w-5 h-5 mr-2 text-blue-600" />
+                  <User className="w-5 h-5 mr-2 text-brand" />
                   <span className="font-medium text-gray-900">Welcome, {user?.email}</span>
                 </div>
                 <button
@@ -199,7 +199,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                     value={newResource.title}
                     onChange={(e) => setNewResource(prev => ({ ...prev, title: e.target.value }))}
                     placeholder="Title"
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                     required
                   />
                   <input
@@ -207,7 +207,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                     value={newResource.description}
                     onChange={(e) => setNewResource(prev => ({ ...prev, description: e.target.value }))}
                     placeholder="Description"
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                     required
                   />
                   <input
@@ -215,7 +215,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                     value={newResource.category}
                     onChange={(e) => setNewResource(prev => ({ ...prev, category: e.target.value }))}
                     placeholder="Category"
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                     required
                   />
                 </div>
@@ -229,13 +229,13 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                         value={t.language}
                         onChange={(e) => updateTranslation(index, 'language', e.target.value)}
                         placeholder="Language"
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                       />
                       <input
                         type="file"
                         accept=".pdf,.doc,.docx"
                         onChange={(e) => updateTranslation(index, 'file', e.target.files?.[0] || null)}
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                       />
                       <button
                         type="button"
@@ -249,7 +249,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                   <button
                     type="button"
                     onClick={addTranslationField}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    className="px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand"
                   >
                     Add Translation
                   </button>
