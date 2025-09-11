@@ -24,7 +24,6 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     category: '',
     type: 'manual' as const,
   });
-  const [newFile, setNewFile] = useState<File | null>(null);
   const [translations, setTranslations] = useState<{ language: string; file: File | null }[]>([]);
 
   const addTranslationField = () =>
@@ -62,16 +61,14 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
   const handleAddResource = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newFile) return;
+    // Require at least one translation with both language and file
+    if (translations.filter(t => t.language && t.file).length === 0) {
+      alert('Please add at least one translation.');
+      return;
+    }
 
     setIsLoading(true);
     try {
-      // Upload file to Supabase storage
-      const fileUrl = await uploadFile(newFile);
-
-      // Generate QR code
-      const qrCode = generateQRCode(fileUrl);
-
       // Upload translations
       const uploadedTranslations = await Promise.all(
         translations
@@ -82,22 +79,21 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
           })
       );
 
+      const mainFile = uploadedTranslations[0];
+      const qrCode = generateQRCode(mainFile.file_url);
+
       // Add resource to database
       await addResource({
         ...newResource,
-        file_url: fileUrl,
-        file_name: newFile.name,
+        file_url: mainFile.file_url,
+        file_name: mainFile.file_name,
         qr_code: qrCode,
         translations: uploadedTranslations,
       });
 
       // Reset form
       setNewResource({ title: '', description: '', category: '', type: 'manual' });
-      setNewFile(null);
       setTranslations([]);
-      // Reset file input
-      const fileInput = document.getElementById('file-input') as HTMLInputElement;
-      if (fileInput) fileInput.value = '';
     } catch (error) {
       console.error(error);
       alert('Failed to add resource. Please try again.');
@@ -219,14 +215,6 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                     value={newResource.category}
                     onChange={(e) => setNewResource(prev => ({ ...prev, category: e.target.value }))}
                     placeholder="Category"
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                  <input
-                    id="file-input"
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    onChange={(e) => setNewFile(e.target.files?.[0] || null)}
                     className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     required
                   />

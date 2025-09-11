@@ -11,10 +11,12 @@ interface ResourceCardProps {
 
 export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCardProps) {
   const [showQR, setShowQR] = React.useState(false);
-  const [selectedLanguage, setSelectedLanguage] = React.useState('original');
+  const initialLanguage = resource.translations?.[0]?.language || '';
+  const [selectedLanguage, setSelectedLanguage] = React.useState(initialLanguage);
 
-  const currentTranslation =
-    resource.translations?.find(t => t.language === selectedLanguage);
+  const currentTranslation = resource.translations?.find(
+    t => t.language === selectedLanguage
+  );
   const fileUrl = currentTranslation?.file_url || resource.file_url;
   const fileName = currentTranslation?.file_name || resource.file_name;
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
@@ -66,7 +68,6 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
                     onChange={(e) => setSelectedLanguage(e.target.value)}
                     className="px-2 py-1 border border-gray-300 rounded text-sm flex-shrink-0"
                   >
-                    <option value="original">Cover Page</option>
                     {resource.translations.map((t) => (
                       <option key={t.language} value={t.language}>
                         {t.language}
