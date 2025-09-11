@@ -69,10 +69,6 @@ function App() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
               <img src="/image.png" alt="Sinapi Logo" className="w-8 h-8" />
-              <div>
-                <h1 className="text-xl font-bold">Sinapi</h1>
-                <p className="text-xs text-gray-500"></p>
-              </div>
             </div>
             
             <button 
