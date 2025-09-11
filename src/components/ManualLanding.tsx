@@ -111,14 +111,14 @@ export function ManualLanding({ id }: ManualLandingProps) {
             href={fileUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center px-4 py-2 bg-transparent text-blue-600 border border-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors duration-200"
+            className="inline-flex items-center px-4 py-2 bg-transparent text-brand border border-brand text-sm font-medium rounded-lg hover:bg-brand/10 transition-colors duration-200"
           >
             <Eye className="w-4 h-4 mr-2" />
             View
           </a>
           <button
             onClick={handleDownload}
-            className="inline-flex items-center px-4 py-2 bg-transparent text-blue-600 border border-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors duration-200"
+            className="inline-flex items-center px-4 py-2 bg-transparent text-brand border border-brand text-sm font-medium rounded-lg hover:bg-brand/10 transition-colors duration-200"
           >
             <Download className="w-4 h-4 mr-2" />
             Download

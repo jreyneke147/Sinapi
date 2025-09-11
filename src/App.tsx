@@ -38,7 +38,7 @@ function App() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand mx-auto mb-4"></div>
           <p className="text-gray-600">Loading resources...</p>
         </div>
       </div>
@@ -52,7 +52,7 @@ function App() {
           <p className="text-red-600 mb-4">Error loading resources: {error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand"
           >
             Retry
           </button>
@@ -64,20 +64,20 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       {/* Header */}
-      <header className="relative bg-gradient-to-r from-blue-900 to-blue-700 text-white shadow-lg">
+      <header className="relative bg-brand text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <Building2 className="w-8 h-8 text-blue-200" />
+              <Building2 className="w-8 h-8 text-brand/50" />
               <div>
                 <h1 className="text-xl font-bold">Sinapi</h1>
-                <p className="text-xs text-blue-200"></p>
+                <p className="text-xs text-brand/50"></p>
               </div>
             </div>
             
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)} 
-              className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-800 transition-colors"
+              className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-brand transition-colors"
             >
               <span className="font-medium">Menu</span>
               {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -110,7 +110,7 @@ function App() {
       </header>
 
       {/* Search Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-10">
+      <section className="bg-brand text-white py-10">
         <div className="max-w-6xl mx-auto px-4">
           <div className="max-w-2xl mx-auto">
             <div className="relative mb-6">
@@ -120,7 +120,7 @@ function App() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search manuals..."
-                className="w-full pl-12 pr-4 py-4 rounded-lg border-0 text-gray-900 focus:ring-4 focus:ring-blue-300 shadow-lg text-lg"
+                className="w-full pl-12 pr-4 py-4 rounded-lg border-0 text-gray-900 focus:ring-4 focus:ring-brand shadow-lg text-lg"
               />
             </div>
 
@@ -131,8 +131,8 @@ function App() {
                   onClick={() => setSelectedCategory(category)}
                   className={`px-4 py-1 rounded-full text-xs font-medium transition-all ${
                     selectedCategory === category
-                      ? 'bg-white text-blue-700'
-                      : 'bg-blue-800 bg-opacity-30 text-blue-200 hover:bg-opacity-50'
+                      ? 'bg-white text-brand'
+                      : 'bg-brand bg-opacity-30 text-brand/70 hover:bg-opacity-50'
                   }`}
                 >
                   {category === 'all' ? 'All Categories' : category}
@@ -147,9 +147,9 @@ function App() {
         {/* Manuals Section */}
         <section id="manuals">
           <div className="flex items-center mb-8">
-            <FileText className="w-8 h-8 text-blue-600 mr-3" />
+            <FileText className="w-8 h-8 text-brand mr-3" />
             <h2 className="text-3xl font-bold text-gray-900">How-to Manuals</h2>
-            <span className="ml-4 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+            <span className="ml-4 bg-brand/10 text-brand px-3 py-1 rounded-full text-sm font-medium">
               {manuals.length} available
             </span>
           </div>
