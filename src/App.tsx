@@ -127,8 +127,8 @@ function App() {
                   onClick={() => setSelectedCategory(category)}
                   className={`px-4 py-1 rounded-full text-xs font-medium transition-all ${
                     selectedCategory === category
-                      ? 'bg-white text-brand'
-                      : 'bg-brand bg-opacity-30 text-brand/70 hover:bg-opacity-50'
+                      ? 'bg-white text-brand border-2 border-white'
+                      : 'bg-white text-brand hover:bg-gray-100'
                   }`}
                 >
                   {category === 'all' ? 'All Categories' : category}
