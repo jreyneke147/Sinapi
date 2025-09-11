@@ -64,20 +64,20 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       {/* Header */}
-      <header className="relative bg-brand text-white shadow-lg">
+      <header className="relative bg-white text-gray-900 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <Building2 className="w-8 h-8 text-brand/50" />
+              <img src="/image.png" alt="Sinapi Logo" className="w-8 h-8" />
               <div>
                 <h1 className="text-xl font-bold">Sinapi</h1>
-                <p className="text-xs text-brand/50"></p>
+                <p className="text-xs text-gray-500"></p>
               </div>
             </div>
             
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)} 
-              className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-brand transition-colors"
+              className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-brand text-white hover:bg-brand/90 transition-colors"
             >
               <span className="font-medium">Menu</span>
               {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -85,7 +85,7 @@ function App() {
           </div>
           
           {isMenuOpen && (
-            <nav className="absolute right-4 top-16 bg-white text-gray-900 shadow-lg rounded-lg py-2 w-48 z-50">
+            <nav className="absolute right-4 top-16 bg-white text-gray-900 shadow-lg rounded-lg py-2 w-48 z-50 border border-gray-200">
               <a
                 href="#manuals"
                 className="block px-4 py-3 hover:bg-gray-100 transition-colors"
