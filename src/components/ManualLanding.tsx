@@ -19,7 +19,7 @@ export function ManualLanding({ id }: ManualLandingProps) {
         const { data, error } = await supabase
           .from('resources')
           .select(
-            'id, title, description, category, type, file_url, file_name, translations, created_at'
+            'id, title, description, category, type, file_url, file_name, icon_url, translations, created_at'
           )
           .eq('id', id)
           .single();
@@ -79,6 +79,15 @@ export function ManualLanding({ id }: ManualLandingProps) {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-md p-6 max-w-xl w-full">
+        {resource.icon_url && (
+          <div className="flex justify-center mb-4">
+            <img
+              src={resource.icon_url}
+              alt={`${resource.title} icon`}
+              className="w-20 h-20 object-cover rounded-md border border-gray-200"
+            />
+          </div>
+        )}
         <h1 className="text-2xl font-bold mb-2">{resource.title}</h1>
         <p className="text-gray-600 mb-4">{resource.description}</p>
 

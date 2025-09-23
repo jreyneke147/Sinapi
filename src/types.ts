@@ -6,6 +6,7 @@ export interface Resource {
   type: 'manual';
   file_url: string;
   file_name: string;
+  icon_url?: string | null;
   translations?: {
     language: string;
     file_url: string;
