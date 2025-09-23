@@ -42,14 +42,29 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
       <div className="p-6">
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-            {resource.title}
-          </h3>
-          <p className="text-gray-600 text-sm mb-3 line-clamp-3">{resource.description}</p>
-          <span className="inline-block px-3 py-1 text-xs font-medium bg-brand/10 text-brand rounded-full">
-            {resource.category}
-          </span>
+        <div className={`mb-4 ${resource.icon_url ? 'flex gap-4 items-start' : ''}`}>
+          {resource.icon_url && (
+            <a
+              href={landingUrl}
+              className="flex-shrink-0 block rounded-md overflow-hidden border border-gray-200 hover:shadow-sm transition-shadow"
+              aria-label={`View ${resource.title}`}
+            >
+              <img
+                src={resource.icon_url}
+                alt={`${resource.title} icon`}
+                className="w-16 h-16 object-cover"
+              />
+            </a>
+          )}
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+              {resource.title}
+            </h3>
+            <p className="text-gray-600 text-sm mb-3 line-clamp-3">{resource.description}</p>
+            <span className="inline-block px-3 py-1 text-xs font-medium bg-brand/10 text-brand rounded-full">
+              {resource.category}
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">

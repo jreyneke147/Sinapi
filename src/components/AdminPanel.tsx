@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Plus, Lock, Eye, EyeOff, User } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useResources } from '../hooks/useResources';
-import { uploadFile } from '../utils/fileUpload';
+import { uploadFile, uploadIcon, ICON_ALLOWED_MIME_TYPES, ICON_MAX_FILE_SIZE } from '../utils/fileUpload';
 import { generateQRCode } from '../utils/qrCode';
 import { ResourceCard } from './ResourceCard';
 
@@ -18,6 +18,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const iconInputRef = useRef<HTMLInputElement | null>(null);
   const [newResource, setNewResource] = useState({
     title: '',
     description: '',
@@ -25,6 +26,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     type: 'manual' as const,
   });
   const [translations, setTranslations] = useState<{ language: string; file: File | null }[]>([]);
+  const [iconFile, setIconFile] = useState<File | null>(null);
 
   const addTranslationField = () =>
     setTranslations(prev => [...prev, { language: '', file: null }]);
@@ -41,6 +43,35 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
   const removeTranslationField = (index: number) => {
     setTranslations(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleIconChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
+
+    if (!file) {
+      setIconFile(null);
+      return;
+    }
+
+    if (!ICON_ALLOWED_MIME_TYPES.includes(file.type as typeof ICON_ALLOWED_MIME_TYPES[number])) {
+      alert('Please select a PNG, JPG, or WEBP image for the icon.');
+      setIconFile(null);
+      if (iconInputRef.current) {
+        iconInputRef.current.value = '';
+      }
+      return;
+    }
+
+    if (file.size > ICON_MAX_FILE_SIZE) {
+      alert('Icon file must be 2 MB or smaller.');
+      setIconFile(null);
+      if (iconInputRef.current) {
+        iconInputRef.current.value = '';
+      }
+      return;
+    }
+
+    setIconFile(file);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -69,6 +100,11 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
     setIsLoading(true);
     try {
+      let iconUrl: string | undefined;
+      if (iconFile) {
+        iconUrl = await uploadIcon(iconFile);
+      }
+
       // Upload translations
       const uploadedTranslations = await Promise.all(
         translations
@@ -89,11 +125,16 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
         file_name: mainFile.file_name,
         qr_code: qrCode,
         translations: uploadedTranslations,
+        ...(iconUrl ? { icon_url: iconUrl } : {}),
       });
 
       // Reset form
       setNewResource({ title: '', description: '', category: '', type: 'manual' });
       setTranslations([]);
+      setIconFile(null);
+      if (iconInputRef.current) {
+        iconInputRef.current.value = '';
+      }
     } catch (error) {
       console.error(error);
       alert('Failed to add resource. Please try again.');
@@ -218,6 +259,22 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                     className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
                     required
                   />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-900 mb-2">
+                    Manual Icon (optional)
+                  </label>
+                  <input
+                    type="file"
+                    accept={ICON_ALLOWED_MIME_TYPES.join(',')}
+                    onChange={handleIconChange}
+                    ref={iconInputRef}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    PNG, JPG, or WEBP up to 2 MB.
+                  </p>
                 </div>
 
                 <div className="space-y-4 mb-4">
