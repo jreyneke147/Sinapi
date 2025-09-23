@@ -54,6 +54,23 @@ export function useResources() {
     }
   };
 
+  const updateResource = async (id: string, updates: Partial<Omit<Resource, 'id' | 'created_at' | 'updated_at'>>) => {
+    try {
+      const { data, error } = await supabase
+        .from('resources')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      setResources(prev => prev.map(r => r.id === id ? data : r));
+      return data;
+    } catch (err) {
+      throw new Error(err instanceof Error ? err.message : 'Failed to update resource');
+    }
+  };
+
   useEffect(() => {
     fetchResources();
   }, []);
@@ -64,6 +81,7 @@ export function useResources() {
     error,
     addResource,
     deleteResource,
+    updateResource,
     refetch: fetchResources
   };
 }

@@ -13,12 +13,13 @@ interface AdminPanelProps {
 
 export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
   const { user, signIn, signOut, isAuthenticated } = useAuth();
-  const { resources, addResource, deleteResource } = useResources();
+  const { resources, addResource, deleteResource, updateResource } = useResources();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const iconInputRef = useRef<HTMLInputElement | null>(null);
+  const [editingResource, setEditingResource] = useState<Resource | null>(null);
   const [newResource, setNewResource] = useState({
     title: '',
     description: '',
@@ -27,6 +28,31 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
   });
   const [translations, setTranslations] = useState<{ language: string; file: File | null }[]>([]);
   const [iconFile, setIconFile] = useState<File | null>(null);
+
+  // Reset form when switching between add/edit modes
+  const resetForm = () => {
+    setNewResource({ title: '', description: '', category: '', type: 'manual' });
+    setTranslations([]);
+    setIconFile(null);
+    setEditingResource(null);
+    if (iconInputRef.current) {
+      iconInputRef.current.value = '';
+    }
+  };
+
+  const handleEditResource = (resource: Resource) => {
+    setEditingResource(resource);
+    setNewResource({
+      title: resource.title,
+      description: resource.description,
+      category: resource.category,
+      type: resource.type,
+    });
+    setTranslations(
+      resource.translations?.map(t => ({ language: t.language, file: null })) || []
+    );
+    setIconFile(null);
+  };
 
   const addTranslationField = () =>
     setTranslations(prev => [...prev, { language: '', file: null }]);
@@ -92,8 +118,11 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
   const handleAddResource = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Require at least one translation with both language and file
-    if (translations.filter(t => t.language && t.file).length === 0) {
+    
+    // For new resources, require at least one translation with both language and file
+    // For editing, allow updates without new files
+    const validTranslations = translations.filter(t => t.language && t.file);
+    if (!editingResource && validTranslations.length === 0) {
       alert('Please add at least one translation.');
       return;
     }
@@ -105,39 +134,57 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
         iconUrl = await uploadIcon(iconFile);
       }
 
-      // Upload translations
-      const uploadedTranslations = await Promise.all(
-        translations
-          .filter(t => t.language && t.file)
-          .map(async (t) => {
+
+      if (editingResource) {
+        // Update existing resource
+        const updates: any = {
+          ...newResource,
+          ...(iconUrl ? { icon_url: iconUrl } : {}),
+        };
+
+        // Only update translations if new files were provided
+        if (validTranslations.length > 0) {
+          const uploadedTranslations = await Promise.all(
+            validTranslations.map(async (t) => {
+              const url = await uploadFile(t.file!);
+              return { language: t.language, file_url: url, file_name: t.file!.name };
+            })
+          );
+          
+          const mainFile = uploadedTranslations[0];
+          updates.file_url = mainFile.file_url;
+          updates.file_name = mainFile.file_name;
+          updates.qr_code = generateQRCode(mainFile.file_url);
+          updates.translations = uploadedTranslations;
+        }
+
+        await updateResource(editingResource.id, updates);
+      } else {
+        // Add new resource
+        const uploadedTranslations = await Promise.all(
+          validTranslations.map(async (t) => {
             const url = await uploadFile(t.file!);
             return { language: t.language, file_url: url, file_name: t.file!.name };
           })
-      );
+        );
 
-      const mainFile = uploadedTranslations[0];
-      const qrCode = generateQRCode(mainFile.file_url);
+        const mainFile = uploadedTranslations[0];
+        const qrCode = generateQRCode(mainFile.file_url);
 
-      // Add resource to database
-      await addResource({
-        ...newResource,
-        file_url: mainFile.file_url,
-        file_name: mainFile.file_name,
-        qr_code: qrCode,
-        translations: uploadedTranslations,
-        ...(iconUrl ? { icon_url: iconUrl } : {}),
-      });
-
-      // Reset form
-      setNewResource({ title: '', description: '', category: '', type: 'manual' });
-      setTranslations([]);
-      setIconFile(null);
-      if (iconInputRef.current) {
-        iconInputRef.current.value = '';
+        await addResource({
+          ...newResource,
+          file_url: mainFile.file_url,
+          file_name: mainFile.file_name,
+          qr_code: qrCode,
+          translations: uploadedTranslations,
+          ...(iconUrl ? { icon_url: iconUrl } : {}),
+        });
       }
+
+      resetForm();
     } catch (error) {
       console.error(error);
-      alert('Failed to add resource. Please try again.');
+      alert(`Failed to ${editingResource ? 'update' : 'add'} resource. Please try again.`);
     } finally {
       setIsLoading(false);
     }
@@ -233,7 +280,20 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
               {/* Add Resource Form */}
               <form onSubmit={handleAddResource} className="bg-gray-50 rounded-lg p-6 mb-8">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4">Add New Resource</h4>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-lg font-semibold text-gray-900">
+                    {editingResource ? 'Edit Resource' : 'Add New Resource'}
+                  </h4>
+                  {editingResource && (
+                    <button
+                      type="button"
+                      onClick={resetForm}
+                      className="text-sm text-gray-600 hover:text-gray-800"
+                    >
+                      Cancel Edit
+                    </button>
+                  )}
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                   <input
                     type="text"
@@ -279,6 +339,11 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
                 <div className="space-y-4 mb-4">
                   <h5 className="font-medium text-gray-900">Translations</h5>
+                  {editingResource && (
+                    <p className="text-sm text-gray-600">
+                      Leave file fields empty to keep existing files. Only upload new files if you want to replace them.
+                    </p>
+                  )}
                   {translations.map((t, index) => (
                     <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-2">
                       <input
@@ -293,6 +358,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                         accept=".pdf,.doc,.docx"
                         onChange={(e) => updateTranslation(index, 'file', e.target.files?.[0] || null)}
                         className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand"
+                        {...(editingResource ? {} : { required: true })}
                       />
                       <button
                         type="button"
@@ -318,7 +384,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                   className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center disabled:opacity-50"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  {isLoading ? 'Adding...' : 'Add Resource'}
+                  {isLoading ? (editingResource ? 'Updating...' : 'Adding...') : (editingResource ? 'Update Resource' : 'Add Resource')}
                 </button>
               </form>
 
@@ -332,6 +398,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                       resource={resource}
                       isAdmin={true}
                       onDelete={handleDeleteResource}
+                      onEdit={handleEditResource}
                     />
                   ))}
                 </div>

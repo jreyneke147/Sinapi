@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, QrCode, Trash2, Eye } from 'lucide-react';
+import { Download, QrCode, Trash2, Eye, Edit } from 'lucide-react';
 import { Resource } from '../types';
 import { generateQRCode } from '../utils/qrCode';
 
@@ -7,9 +7,10 @@ interface ResourceCardProps {
   resource: Resource;
   isAdmin?: boolean;
   onDelete?: (id: string) => void;
+  onEdit?: (resource: Resource) => void;
 }
 
-export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCardProps) {
+export function ResourceCard({ resource, isAdmin = false, onDelete, onEdit }: ResourceCardProps) {
   const [showQR, setShowQR] = React.useState(false);
   const initialLanguage = resource.translations?.[0]?.language || '';
   const [selectedLanguage, setSelectedLanguage] = React.useState(initialLanguage);
@@ -117,12 +118,20 @@ export function ResourceCard({ resource, isAdmin = false, onDelete }: ResourceCa
               </button>
 
               {isAdmin && onDelete && (
+                <>
+                  <button
+                    onClick={() => onEdit?.(resource)}
+                    className="inline-flex items-center px-3 py-2 bg-blue-100 text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-200 transition-colors duration-200 flex-shrink-0"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </button>
                 <button
                   onClick={() => onDelete(resource.id)}
                   className="inline-flex items-center px-3 py-2 bg-red-100 text-red-700 text-sm font-medium rounded-lg hover:bg-red-200 transition-colors duration-200 flex-shrink-0"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
+                </>
               )}
             </div>
           </div>
