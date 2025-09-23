@@ -79,17 +79,21 @@ export function ManualLanding({ id }: ManualLandingProps) {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-md p-6 max-w-xl w-full">
-        {resource.icon_url && (
-          <div className="flex justify-center mb-4">
-            <img
-              src={resource.icon_url}
-              alt={`${resource.title} icon`}
-              className="w-32 h-32 object-cover rounded-md transform scale-x-[-1]"
-            />
+        <div className={`mb-4 ${resource.icon_url ? 'flex gap-4 items-start' : ''}`}>
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold mb-2">{resource.title}</h1>
+            <p className="text-gray-600 mb-4">{resource.description}</p>
           </div>
-        )}
-        <h1 className="text-2xl font-bold mb-2">{resource.title}</h1>
-        <p className="text-gray-600 mb-4">{resource.description}</p>
+          {resource.icon_url && (
+            <div className="flex-shrink-0">
+              <img
+                src={resource.icon_url}
+                alt={`${resource.title} icon`}
+                className="w-32 h-32 object-cover rounded-md transform scale-x-[-1]"
+              />
+            </div>
+          )}
+        </div>
 
         {resource.translations && resource.translations.length > 0 && (
           <div className="mb-4">

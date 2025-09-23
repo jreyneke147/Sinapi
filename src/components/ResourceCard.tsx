@@ -44,19 +44,6 @@ export function ResourceCard({ resource, isAdmin = false, onDelete, onEdit }: Re
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
       <div className="p-6">
         <div className={`mb-4 ${resource.icon_url ? 'flex gap-4 items-start' : ''}`}>
-          {resource.icon_url && (
-            <a
-              href={landingUrl}
-              className="flex-shrink-0 block rounded-md overflow-hidden hover:shadow-sm transition-shadow"
-              aria-label={`View ${resource.title}`}
-            >
-              <img
-                src={resource.icon_url}
-                alt={`${resource.title} icon`}
-                className="w-24 h-24 object-cover transform scale-x-[-1]"
-              />
-            </a>
-          )}
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
               {resource.title}
@@ -66,6 +53,19 @@ export function ResourceCard({ resource, isAdmin = false, onDelete, onEdit }: Re
               {resource.category}
             </span>
           </div>
+          {resource.icon_url && (
+            <a 
+              href={landingUrl}
+              className="flex-shrink-0 block rounded-md overflow-hidden hover:shadow-sm transition-shadow ml-4"
+              aria-label={`View ${resource.title}`}
+            >
+              <img
+                src={resource.icon_url}
+                alt={`${resource.title} icon`}
+                className="w-24 h-24 object-cover transform scale-x-[-1]"
+              />
+            </a>
+          )}
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
