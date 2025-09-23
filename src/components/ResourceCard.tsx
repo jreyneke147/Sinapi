@@ -62,7 +62,7 @@ export function ResourceCard({ resource, isAdmin = false, onDelete, onEdit }: Re
               <img
                 src={resource.icon_url}
                 alt={`${resource.title} icon`}
-                className="w-24 h-24 object-cover transform scale-x-[-1]"
+                className="w-24 h-24 object-cover"
               />
             </a>
           )}
