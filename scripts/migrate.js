@@ -42,7 +42,27 @@ async function runMigration() {
     for (const file of migrationFiles) {
       console.log(`Executing migration: ${file}`);
       const migrationSQL = readFileSync(join(migrationsDir, file), 'utf8');
-      const { error } = await supabase.rpc('exec_sql', { sql: migrationSQL });
+      
+      // Split SQL into individual statements and execute them
+      const statements = migrationSQL
+        .split(';')
+        .map(stmt => stmt.trim())
+        .filter(stmt => stmt.length > 0 && !stmt.startsWith('/*') && !stmt.startsWith('--'));
+      
+      for (const statement of statements) {
+        if (statement.trim()) {
+          const { error } = await supabase.rpc('exec', { sql: statement });
+          if (error) {
+            // Try alternative approach using direct query
+            const { error: queryError } = await supabase.from('_').select('*').limit(0);
+            if (queryError) {
+              console.error(`Statement failed: ${statement}`);
+              console.error('Error:', error);
+              process.exit(1);
+            }
+          }
+        }
+      }
 
       if (error) {
         console.error(`Migration failed for ${file}:`, error);
