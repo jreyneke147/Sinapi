@@ -47,13 +47,13 @@ export function ResourceCard({ resource, isAdmin = false, onDelete, onEdit }: Re
           {resource.icon_url && (
             <a
               href={landingUrl}
-              className="flex-shrink-0 block rounded-md overflow-hidden border border-gray-200 hover:shadow-sm transition-shadow"
+              className="flex-shrink-0 block rounded-md overflow-hidden hover:shadow-sm transition-shadow"
               aria-label={`View ${resource.title}`}
             >
               <img
                 src={resource.icon_url}
                 alt={`${resource.title} icon`}
-                className="w-16 h-16 object-cover"
+                className="w-24 h-24 object-cover transform scale-x-[-1]"
               />
             </a>
           )}

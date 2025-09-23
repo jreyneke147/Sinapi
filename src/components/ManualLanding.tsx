@@ -84,7 +84,7 @@ export function ManualLanding({ id }: ManualLandingProps) {
             <img
               src={resource.icon_url}
               alt={`${resource.title} icon`}
-              className="w-20 h-20 object-cover rounded-md border border-gray-200"
+              className="w-32 h-32 object-cover rounded-md transform scale-x-[-1]"
             />
           </div>
         )}
