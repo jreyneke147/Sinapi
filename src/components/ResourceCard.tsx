@@ -54,9 +54,9 @@ export function ResourceCard({ resource, isAdmin = false, onDelete, onEdit }: Re
             </span>
           </div>
           {resource.icon_url && (
-            <a 
+            <a
               href={landingUrl}
-              className="flex-shrink-0 block rounded-md overflow-hidden hover:shadow-sm transition-shadow ml-4"
+              className="flex-shrink-0 block rounded-md overflow-hidden hover:shadow-sm transition-shadow"
               aria-label={`View ${resource.title}`}
             >
               <img
