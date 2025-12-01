@@ -171,8 +171,8 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h3 className="text-xl font-bold">Sinapi</h3>
           <p className="text-gray-400 mt-4">
-            Leading provider of advanced medical imaging technology and ICU solutions
-            designed for evidence-based patient care.
+            We serve those who serve the physically ill by creating medical devices that
+            improve healthcare.
           </p>
           <div className="border-t border-gray-800 mt-8 pt-8 text-gray-400">
             <p>© 2025 Sinapi. All rights reserved.</p>
